@@ -1,27 +1,24 @@
 # Rails 6, webpacker, postgres, react, atmosphere
 # 2019-06-19
 
-def add_gems
-  gem 'aasm'
-  gem 'graphql'
-  gem 'interactor-rails', git: 'git@github.com:CPPWind/interactor-rails.git'
-  gem 'active_hash'
+require 'pathname'
+require_relative './yarn_packages'
+require_relative './ruby_gems'
+require_relative './guard'
+require_relative './webpacker'
+require_relative './basic_pages'
 
-  gem_group :development do
-    gem 'better_errors'
-    gem 'annotate'
-    gem 'guard-bundler'
-    gem 'guard-process'
-    gem 'guard-rails'
-    gem 'guard-spring'
-    gem 'libnotify'
-    gem 'aasm-diagram', require: false
-    gem "foreman", "~> 0.64.0"
-    gem "awesome_print", "~> 1.8"
-  end
+TEMPLATE_DIR = Pathname(__dir__).expand_path
+
+def source_paths
+  [TEMPLATE_DIR]
 end
 
-def add_js
-  `yarn add apollo-client apollo-cache-inmemory apollo-link-http apollo-link-error apollo-link graphql-tag @babel/preset-react @fortawesome/fontawesome-pro-regular @fortawesome/fontawesome-pro-solid @fortawesome/fontawesome-svg-core @fortawesome/pro-light-svg-icons @fortawesome/pro-regular-svg-icons @fortawesome/pro-solid-svg-icons @fortawesome/react-fontawesome babel-plugin-transform-react-remove-prop-types babel-preset-react classnames core-js graphql honeycomb-grid hygen-add hygen-create inflection node-sass postcss-comment-2 postcss-import postcss-preset-env prettier prop-types react react-apollo react-apollo-hooks react-burger-menu react-helmet react-router-dom react-toastify tachyons-custom webpack-merge`
-end
+after_bundle do
+  add_ruby_gems
+  add_yarn_packages
 
+  setup_guard
+  setup_webpacker
+  setup_basic_pages
+end
